@@ -1,1 +1,31 @@
+name: Build Windows 32-Bit
+on: [push]
 
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Rust und 32-Bit-Target installieren
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: i686-pc-windows-msvc
+
+      - name: Tauri-CLI global installieren
+        run: cargo install tauri-cli --version "^2.0.0"
+
+      - name: Anwendung nativ kompilieren
+        run: cargo tauri build --target i686-pc-windows-msvc --no-bundle
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CARGO_BUILD_JOBS: 2
+          RUSTFLAGS: "-C codegen-units=1 -C opt-level=1"
+
+      - name: Fertiges ZIP-Paket bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: MetadatenEditor-Win32
+          path: src-tauri/target/i686-pc-windows-msvc/release/
