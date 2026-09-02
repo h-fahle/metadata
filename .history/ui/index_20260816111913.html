@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Tauri ExifTool Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2>ExifTool Daten auslesen</h2>
+    <p>Aabsoluter Pfad zu einem Bild:</p>
+    
+    <input type="text" id="bildpfad" value="/home/hermann/Desktop/Bilder/Grabstein.jpg">
+    <button onclick="exifAuslesen()">Metadaten holen</button>
+    
+
+	<div class="main-container">
+		
+		<!-- Das Vorschaubild links -->
+		<div id="sidebar">
+			<img id="vorschau-bild" src=""/>
+		</div>
+			
+		<!-- Das Formular rechts -->
+		<form action="" method="post">
+		  <p>
+			<label for="filename">Dateiname:</label>
+			<input type="text" id="filename" name="filename" />
+		  </p>
+		  <p>
+			<label for="caption">Überschrift:</label>
+			<input type="text" id="caption" name="caption" />
+		  </p>
+		  <p>
+			<label for="description">Beschreibung:</label>
+			<textarea id="description" name="description" rows="10"></textarea>
+		  </p>
+		  <p>
+			<label for="keywords">Stichwörter:</label>
+			<input type="text" id="keywords" name="keywords">
+		  </p>
+		  <p>
+			<label for="creator">Fotograf:</label>
+			<input type="text" id="creator" name="creator">
+		  </p>
+		  <p>
+			<label for="copyright">Copyright:</label>
+			<input type="text" id="copyright" name="copyright">
+		  </p>
+		  <p>
+			<label for="editor">Bearbeiter:</label>
+			<input type="text" id="editor" name="editor">
+		  </p>
+		  <p>
+			<label for="position">Standort:</label>
+			<input type="text" id="position" name="position">
+		  </p>
+		  
+			<!-- NEU: Der Speichern-Button am Ende des Formular-Containers -->
+			<div style="text-align: right; margin-top: 15px;">
+				<button onclick="exifSchreiben()" style="background: #007BFF; padding: 8px 20px; font-size: 13px;">Änderungen Schreiben</button>
+			</div>
+
+		</form>
+	</div> <!-- Ende des main-containers -->
+    
+    <div id="ausgabe"></div>
+
+    <script>
+        async function exifAuslesen() {
+            const pfad = document.getElementById("bildpfad").value;
+            const ausgabe = document.getElementById("ausgabe");
+            const vorschauImg = document.getElementById("vorschau-bild");
+
+            
+            ausgabe.innerText = "Rufe ExifTool auf...";
+            
+            try {
+                // 1. Metadaten über Rust holen
+                const jsonText = await window.__TAURI__.core.invoke('lese_bild_metdaten', { dateipfad: pfad });
+                const datenObjekt = JSON.parse(jsonText)[0]; 	// Das 1. JSON-Objekt im JSON-Array in JS-Objekt umwandeln
+                
+                document.getElementById('filename').value = datenObjekt.FileName || '';
+                document.getElementById('caption').value = datenObjekt.CMB_Caption || '';
+                document.getElementById('description').value = datenObjekt.Description || '';
+                document.getElementById('keywords').value = datenObjekt.Keywords || '';
+                document.getElementById('creator').value = datenObjekt.Creator || '';
+                document.getElementById('copyright').value = datenObjekt.Copyright || '';
+                document.getElementById('editor').value = datenObjekt.CMB_Editor || '';
+                document.getElementById('position').value = datenObjekt.GPSPosition || '';
+                
+                // Wir nehmen das erste Element der Liste (ExifTool liefert immer ein Array)
+                // und stellen es schön formatiert im Browser dar
+                // ausgabe.innerText = JSON.stringify(datenObjekt[0], null, 2);
+				ausgabe.innerText = jsonText;
+				
+				// 2. DAS VORSCHAUBILD AKTIVIEREN
+				// Wir wandeln den Linux-Pfad in eine sichere Tauri-Asset-URL um
+				// In Tauri v2 sieht das exakt so aus:
+				const assetUrl = window.__TAURI__.core.convertFileSrc(pfad);
+				
+				// Den Link dem Bild-Tag zuweisen und sichtbar machen
+				vorschauImg.src = assetUrl;
+				vorschauImg.style.display = "block";
+                 
+            } catch (fehler) {
+                ausgabe.innerHTML = "<span style='color: red;'>Fehler: " + fehler + "</span>";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+REAL_USER="${SUDO_USER:-$(who | awk 'NR==1 {print $1}')}"
+
+if [ -n "$REAL_USER" ] && [ "$REAL_USER" != "root" ]; then
+    USER_HOME=$(getent passwd "$REAL_USER" | cut -d: -f6)
+    
+    rm -f "$USER_HOME/Schreibtisch/metadaten-editor.desktop"
+    rm -f "$USER_HOME/Desktop/metadaten-editor.desktop"
+fi
+
+exit 0

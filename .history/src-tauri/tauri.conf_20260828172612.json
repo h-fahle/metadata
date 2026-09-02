@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "MetadatenEditor",
+  "mainBinaryName": "metadata",
+  "version": "4.0.0-beta",
+  "identifier": "de.hfahle.metadata",
+  "build": {
+    "frontendDist": "../ui",
+    "beforeDevCommand": null,
+    "beforeBuildCommand": null,
+    "devUrl": null
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Metadaten Editor",
+        "width": 780,
+        "height": 555,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self' ipc: http://ipc.localhost; img-src 'self' asset: http://asset.localhost; style-src 'self' 'unsafe-inline'",
+      "assetProtocol": {
+        "enable": true,
+        "scope": [
+          "**/*"
+        ]
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "deb"
+    ],
+    "resources": [
+      ".ExifTool_config"
+    ],
+    "icon": [
+      "icons/metadata.png"
+    ],
+    "externalBin": [],
+    "android": {
+      "debugApplicationIdSuffix": ".debug"
+    }
+  },
+  "plugins": {
+    "cli": {
+      "description": "Metadaten-Editor CLI",
+      "args": [
+        {
+          "name": "pfade",
+          "description": "Pfade zu Bildern oder einem Ordner direkt öffnen",
+          "index": 1,
+          "required": false,
+          "takesValue": true,
+          "multiple": true
+        }
+      ]
+    }
+  }
+}

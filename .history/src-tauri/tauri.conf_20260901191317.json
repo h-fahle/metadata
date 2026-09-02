@@ -1,0 +1,75 @@
+{
+  "productName": "MetadatenEditor",
+  "mainBinaryName": "metadata",
+  "version": "4.0.0-beta",
+  "identifier": "de.hfahle.metadata",
+  "build": {
+    "frontendDist": "../ui",
+    "beforeDevCommand": null,
+    "beforeBuildCommand": null,
+    "devUrl": null
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Metadaten Editor",
+        "width": 850,
+        "height": 535,
+        "resizable": true,
+        "fullscreen": false,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self' ipc: http://ipc.localhost; img-src 'self' asset: http://asset.localhost; style-src 'self' 'unsafe-inline'",
+      "assetProtocol": {
+        "enable": true,
+        "scope": [
+          "**/*"
+        ]
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "deb"
+    ],
+    "resources": [
+      ".ExifTool_config"
+    ],
+    "icon": [
+      "icons/metadata.png"
+    ],
+    "externalBin": [],
+    "linux": {
+      "deb": {
+        "files": {
+          "debian/postinst": "debian/postinst",
+          "debian/postrm": "debian/postrm",
+          "/usr/share/metadata/setup-thunar.sh": "scripts/setup-thunar.sh",
+          "/opt/metadata/metadata.png": "icons/metadata.png"
+        }
+      }
+    },
+    "android": {
+      "debugApplicationIdSuffix": ".debug"
+    }
+  },
+  "plugins": {
+    "cli": {
+      "description": "Metadaten-Editor CLI",
+      "args": [
+        {
+          "name": "pfade",
+          "description": "Pfade zu Bildern oder einem Ordner direkt öffnen",
+          "index": 1,
+          "required": false,
+          "takesValue": true,
+          "multiple": true
+        }
+      ]
+    }
+  }
+}

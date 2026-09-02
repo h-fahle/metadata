@@ -1,0 +1,55 @@
+#!/bin/bash
+set -e
+
+echo "# Running custom setup..."
+
+# 1. Benutzer ermitteln
+REAL_USER="${SUDO_USER:-$(who | awk 'NR==1 {print $1}')}"
+
+echo "# Executing setup for user: $REAL_USER"
+
+if [ -n "$REAL_USER" ] && [ "$REAL_USER" != "root" ]; then
+
+    # 1. Thunar-Aktion ausführen
+    if [ -x /opt/metadata/thunar_add_action.sh ]; then
+        runuser -u "$REAL_USER" -- /opt/metadata/thunar_add_action.sh --initialize >/dev/null 2>&1 || true
+        echo "# Thunar Action added!"
+    fi
+
+    # 2. Desktop-Ordner ermitteln
+    DESKTOP_DIR=""
+    if command -v xdg-user-dir >/dev/null 2>&1; then
+        DESKTOP_DIR=$(runuser -u "$REAL_USER" -- xdg-user-dir DESKTOP 2>/dev/null || true)
+    fi
+
+    if [ -z "$DESKTOP_DIR" ]; then
+        USER_HOME=$(getent passwd "$REAL_USER" | cut -d: -f6 || true)
+        if [ -d "$USER_HOME/Schreibtisch" ]; then
+            DESKTOP_DIR="$USER_HOME/Schreibtisch"
+        elif [ -d "$USER_HOME/Desktop" ]; then
+            DESKTOP_DIR="$USER_HOME/Desktop"
+        fi
+    fi
+
+	# 3. Starter kopieren & vertrauenswürdig machen
+    SRC_DESKTOP="/usr/share/applications/metadaten-editor.desktop"
+    if [ -n "$DESKTOP_DIR" ] && [ -d "$DESKTOP_DIR" ] && [ -f "$SRC_DESKTOP" ]; then
+        TARGET="$DESKTOP_DIR/metadaten-editor.desktop"
+        
+        cp "$SRC_DESKTOP" "$TARGET" 2>/dev/null || true
+        chown "$REAL_USER:$REAL_USER" "$TARGET" 2>/dev/null || true
+        chmod +x "$TARGET" 2>/dev/null || true
+
+        # 1. Methode (GNOME / XFCE / Cinnamon via GIO)
+        runuser -u "$REAL_USER" -- gio set "$TARGET" metadata::trusted true >/dev/null 2>&1 || true
+
+        # 2. Methode (Speziell für XFCE / Thunar)
+        runuser -u "$REAL_USER" -- dbus-launch xfxc-desktop --reload >/dev/null 2>&1 || true
+        
+        echo "# Desktop-Starter created and trusted!"
+    fi
+fi
+
+echo "# custom setup done!"
+
+exit 0

@@ -1,0 +1,418 @@
+:root {
+	--app-font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	--app-font-size: 12.5px;
+}
+
+/* 1. Das App-Fenster exakt auf 100% fixieren (kein äußeres Scrollen) */
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+	width: 100vw;
+	overflow: hidden;
+	/* Verhindert jegliche äußere Scrollbalken */
+	background: #f5f5f5;
+	display: flex;
+	flex-direction: column;
+	/* Hauptinhalt oben, Statusleiste unten */
+	font-family: var(--app-font);
+	font-size: var(--app-font-size);
+}
+
+input,
+textarea,
+button {
+	font-family: var(--app-font) !important;
+	font-size: var(--app-font-size) !important;
+}
+
+/* Allumfassender Box-Sizing-Fix für die gesamte App */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+/* 2. Der Hauptbereich füllt den gesamten oberen Platz aus --------------------------- */
+#main-container {
+	flex: 1;
+	display: flex;
+	flex-direction: row;
+	/* Elemente nebeneinander */
+	gap: 10px;
+	padding: 10px;
+	overflow: hidden;
+	/* Verhindert, dass Riesen-Inhalte das Fenster sprengen */
+}
+
+
+/* ------------------------------------------------------------------------------------- */
+/* 3. LINKS: Die Sidebar mit fester Breite */
+#sidebar {
+	width: 140px;
+	min-width: 140px;
+	/* Transparenz, damit der Hintergrund des Hauptfensters durchscheint */
+	background-color: transparent;
+	box-shadow: none;
+	padding: 0;
+	/* Flex-Container für die zwei vertikalen Kacheln */
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+/* Kachel 1: Button-Container */
+/* Die Buttons sieh unten */
+.split-button-container {
+	background-color: #ffffff;
+	border-radius: 8px;
+	padding: 5px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Kachel 2: Bild + Info-Text darunter */
+#preview-card {
+	flex: 1;   /* gesamte restliche Höhe */
+	background-color: #ffffff;
+	border-radius: 8px;
+	padding: 5px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#vorschau-bild {
+	max-width: 130px;
+	margin: 2px auto;
+	height: auto;
+}
+
+/* ------------------------------------------------------------------------------------- */
+/* 4. RECHTS: Das Formular nimmt den gesamten Rest ein und wächst mit */
+#form-container {
+	flex: 1;
+	/* Nimmt 100% des restlichen Platzes ein */
+	min-width: 0;
+	/* Erlaubt Flexbox, die Box bei Bedarf zu verkleinern */
+	background-color: #ffffff;
+	border-radius: 8px;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#ordner-pfad {
+	margin-left: 95px !important;
+	padding-right: 25px;
+	color: #777777;
+	white-space: nowrap;     /* Verhindert den Zeilenumbruch zwingend */
+	overflow: hidden;        /* Versteckt den Text, der übersteht */
+	text-overflow: ellipsis; /* Fügt die drei Punkte (...) ein */
+	/* Textausrichtung nach rechts zwingen */
+	direction: rtl;          
+	text-align: left;        
+}
+
+/* Jede Zeile wird zu einer horizontalen Flexbox */
+.form-row {
+	display: flex !important;
+	flex-direction: row;
+	align-items: center;
+	/* Richtet Label und Input vertikal mittig zueinander aus */
+	gap: 10px;
+	/* Abstand zwischen Label und Input */
+	width: 100%;
+}
+
+/* Die Labels bekommen eine feste Breite, damit alle Inputs sauber untereinander starten */
+.form-row label {
+	width: 95px;
+	/* Breite je nach längstem Label-Text anpassen */
+	min-width: 95px;
+	/* Verhindert, dass das Label zusammengedrückt wird */
+	text-align: right;
+	/* Optional: Richtet den Text rechtsbündig zum Input aus */
+	color: gray;
+	font-weight: bold;
+	margin-left: -12px;
+}
+
+/* Die Eingabefelder füllen jetzt den gesamten restlichen Platz der Zeile aus */
+.form-row input,
+.form-row textarea {
+	flex: 1;
+	/* Zwingt das Input-Feld, den Rest der Zeile einzunehmen */
+	width: 100%;
+	min-width: 0;
+	/* Erlaubt dem Input, bei sehr kleinen Fenstern stabil zu schrumpfen */
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 2px 4px;
+	line-height: 1.4;
+	-webkit-font-smoothing: antialiased;
+	outline: none;
+}
+
+input#filename {
+	font-weight: bold;
+}
+
+.form-row select {
+	/* 1. Setzt das native Design auf ALLEN Plattformen zurück */
+	-webkit-appearance: none;
+	/* Für Chrome, Safari, WebKitGTK, Edge, Opera */
+	-moz-appearance: none;
+	/* Für Firefox */
+	appearance: none;
+	/* Der moderne, offizielle W3C-Standard */
+
+	/* 2. Plattformübergreifender Text-Fix für Unterlängen (g, j, y) */
+	line-height: 1.4;
+	/* 1.5 bietet genug Puffer für Linux- & Windows-Fonts */
+	padding: 2px;
+	/* Rechts Platz für den eigenen Pfeil */
+	width: 100%;
+	height: 24px;
+
+	/* 3. Textglättung für macOS, Windows und Linux */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	/* 4. tandard-Design für die Box */
+	background-color: #ececec;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+	/* Verhindert Layout-Verschiebungen */
+	outline: none;
+	color: gray;
+}
+
+.form-row textarea {
+	min-height: 140px;
+}
+
+.form-row input:focus-visible,
+.form-row textarea:focus-visible {
+	outline: 2px solid gray;
+}
+
+/* Ändert die Ausrichtung für die Textarea-Zeile nach oben */
+.form-row-top {
+	align-items: flex-start !important;
+	/* Richtet Label, Textarea und Icon oben aus */
+}
+
+.form-row-top label,
+.form-row-top .tooltip-container {
+	padding-top: 6px;
+	/* Verhindert, dass das Label zu weit oben klebt */
+}
+
+
+/* ------------------------------------------------------------------------------------- */
+/* 5. UNTEN: Die Statusleiste mit fixer Höhe und eigenem Scrollbalken */
+#statusleiste {
+	height: 20px;
+	/* Feste Höhe für ca. 2 Zeilen Text */
+	min-height: 20px;
+	background-color: #f0f0f0;
+	font-size: 11px;
+	color: #444;
+	padding: 3px;
+	overflow-y: auto;
+	/* Vertikaler Scrollbalken erscheint NUR bei Bedarf */
+	overflow-x: hidden;
+	/* Verhindert horizontales Scrollen in der Statusleiste */
+	-webkit-font-smoothing: antialiased;
+}
+
+#statustext {
+	color: #139c13;
+}
+
+
+/* Bedien-Elemente -------------------------------------------- */
+button {
+	padding: 3px 10px;
+	font-weight: bold;
+	cursor: pointer;
+	border: none;
+	background-color: #e5e5e5;
+	color: gray;
+}
+
+button:hover {
+	background-color: gray;
+	color: white;
+}
+
+.button-group button,
+.form-row button {
+	border-radius: 4px;
+}
+
+#app-copyright {
+	margin-right: auto;
+	padding-top: 12px;
+	font-size: 10px;
+	color: #a0a0a0;
+}
+
+
+/* ------------------------------------------------------------------------------ */
+/* Buttons im Button-Container oben links */
+
+/* Obere Reihe */
+.main-row {
+	height: 25px;
+	display: flex;
+	border-bottom: 1px solid #ccc;
+	/* Trennlinie zur zweiten Reihe */
+}
+
+/* Untere Reihe */
+.pager-row {
+	height: 25px;
+	display: flex;
+	align-items: center;
+	background-color: #f5f5f5;
+}
+
+/* Gemeinsames Design für die Button-Teile */
+.open-files,
+.open-folder,
+.prev-btn,
+.next-btn {
+	font-size: 17px !important;
+	padding: 0;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.prev-btn,
+.next-btn {
+	font-weight: normal;
+}
+
+/* Hauptbutton oben links */
+.open-files {
+	width: 100%;
+	border-top-left-radius: 6px;
+	border-right: 1px solid #ccc
+}
+
+/* Pfeilbutton oben rechts */
+.open-folder {
+	width: 30%;
+	border-top-right-radius: 6px;
+}
+
+/* Blätter-Buttons unten links und rechts */
+.pager-btn {
+	width: 30px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color 0.2s;
+}
+
+.prev-btn {
+	border-bottom-left-radius: 6px;
+}
+
+.next-btn {
+	border-bottom-right-radius: 6px;
+}
+
+.pager-display {
+	height: 100%;
+	flex-grow: 1;
+	/* Nimmt den gesamten Platz in der Mitte ein */
+	text-align: center;
+	font-size: 12px;
+	padding: 5px 0;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	user-select: none;
+	/* Verhindert versehentliches Markieren beim Klicken */
+}
+
+
+
+/* Der Absendeknopf richtet sich nach den Eingabefeldern aus */
+.button-group {
+	display: flex;
+	justify-content: flex-end;
+	margin: 10px 24px 0 0;
+}
+
+.button-group button {
+	margin-left: 5px;
+}
+
+
+/* Tooltip ---------------------------------------------------------- */
+
+/* Container für das Icon und die Box */
+.tooltip-container {
+	position: relative;
+	/* Wichtig, damit sich die Box am Icon ausrichtet */
+	display: inline-flex;
+	align-items: center;
+	cursor: help;
+	/* Zeigt das Fragezeichen/Hilfe-Symbol als Mauszeiger */
+	margin-left: -6px;
+}
+
+/* Das Info-Icon selbst */
+.info-icon {
+	color: #0066cc;
+	/* Schönes Info-Blau */
+	padding: 0 4px;
+	font-size: 13px;
+}
+
+.tooltip-box {
+	display: none;
+	position: fixed;
+
+	width: max-content;
+	max-width: 400px;
+	/* Verhindert, dass der Tooltip bei sehr viel Text das Fenster sprengt */
+	white-space: pre-line;
+
+	background-color: lightyellow;
+	color: black;
+	border: 1px solid gray;
+	padding: 2px 4px;
+	border-radius: 6px;
+	font-size: 11px;
+	line-height: 1.4;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+	z-index: 1001;
+	/* Über der Statusleiste (1000), falls sie sich überschneiden */
+
+	/* Verschiebt den Tooltip komplett nach links, 
+     sodass seine rechte Kante am Cursor sitzt */
+	transform: translate(-100%, 40%);
+	*/
+	/* Animation & Verstecken */
+	transition: opacity 0.2s ease-in-out, visibility 0.2s;
+	pointer-events: none;
+	/* Verhindert, dass die Box beim unabsichtlichen Drüberfahren flackert */
+}
+
+/* Zeige den Tooltip nur, wenn die Maus über dem Container ist */
+.tooltip-container:hover .tooltip-box {
+	display: block;
+}
+
+.img-select-btn:hover .tooltip-box,
+#app-copyright:hover .tooltip-box {
+	transform: none;
+	font-weight: normal;
+	display: block;
+}

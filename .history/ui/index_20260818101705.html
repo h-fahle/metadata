@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Tauri ExifTool Test</title>
+	<script src="script.js"></script>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+	<div class="main-container">
+
+		<!-- Das Vorschaubild links -->
+		<div id="sidebar">
+			<button id="file-open" onclick="dateiAuswählen()">Datei öffnen</button>
+
+			<!-- 			<select id="menue-oeffnen" onchange="menueAktion(this)" >
+				<option value="dateien">🖼️ Bilder öffnen...</option>
+				<option value="ordner">📁 Ordner öffnen...</option>
+			</select>
+ -->
+			<img id="vorschau-bild" src="" style="display:none;" />
+			<div id="bild-info" style="text-align:center;">
+				<span id="img-nummer"></span><br>
+				<span id="img-datum"></span><br>
+				<span id="img-groesse"></span>
+			</div>
+		</div>
+
+		<!-- Das Formular rechts -->
+		<div id="mein-formular-container">
+
+			<div id="ordner-pfad">Kein Bild geladen</div>
+
+			<p>
+				<label for="filename">Dateiname:</label>
+				<input type="text" id="filename" name="filename" title="Im Einzelmodus: Änderung des Dateinamens bewirkt Umbenennung der Datei.
+Im Stapelmodus: Ordnername is nicht änderbar." />
+			</p>
+			<p>
+				<label for="caption">Überschrift:</label>
+				<input type="text" id="caption" name="caption" title="Auch: (Dokument-)Titel, Schlagzeile, Headline" />
+			</p>
+			<p>
+				<label for="description">Beschreibung:</label>
+				<textarea id="description" name="description" style="min-height: 60px;" title="Beschreibender Text in beliebiger Länge.
+(Im Stapelmodus wird der eingegebene Text an vorhandenen angehängt.)
+Hinweis: Einige Programme zeigen nur 2.000 Zeichen oder auch weniger an."></textarea>
+			</p>
+			<p>
+				<label for="keywords">Stichwörter:</label>
+				<input type="text" id="keywords" name="keywords" title="Komma-separierte Liste. Groß-/Kleinschreibung beachten.
+Im Stapelmodus werden die eingegebenen Stichwörter an vorhandene angehängt." />
+			</p>
+			<p>
+				<label for="creator">Fotograf:</label>
+				<input type="text" id="creator" name="creator" title="Urheber, Ersteller, Autor
+(Tags: Artitst, Creator, By-line)" />
+			</p>
+			<p>
+				<label for="copyright">Copyright:</label>
+				<input type="text" id="copyright" name="copyright" title="Urheberrechtshinweis; enthält in der Regel:
+Name des Fotografen, Aufnahmejahr und Nutzungsrechte;
+(z.B. 'Copyright [1975] [Mustermann], Alle Rechte vorbehalten')" />
+			</p>
+			<p>
+				<label for="editor">Bearbeiter:</label>
+				<input type="text" id="editor" name="editor" title="Verfasser der Metadaten
+(Tags: Caption Writer, Writer Editor)" />
+			</p>
+			<p>
+				<label for="position">Standort:</label>
+				<input type="text" id="position" name="position" title="GPS-Koordinaten in Dezimalgrad (51.49129, 8.43317).
+Ermitteln der Koordinaten in der Google Maps-Karte:
+  1. mit rechter Maustaste auf den Standort klicken,
+  2. auf die angezeigten Koordinaten klicken,
+  3. der so gespeicherte Wert kann dann mit Strg+V kopiert werden." />
+			</p>
+
+			<!-- NEU: Der Speichern-Button am Ende des Formular-Containers -->
+			<div style="text-align: right; margin-top: 15px;">
+				<button type="button" onclick="zeigeMaps(event)" style="background: #007BFF;">Maps</button>
+				<button type="button" onclick="exifSchreiben(event)" style="background: #007BFF;">Änderungen Schreiben</button>
+			</div>
+
+		</div>
+	</div> <!-- Ende des main-containers -->
+
+	<div id="ausgabe"></div>
+
+</body>
+
+</html>

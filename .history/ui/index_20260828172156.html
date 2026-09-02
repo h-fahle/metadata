@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Metadaten Editor</title>
+	<script src="script.js" defer></script>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+	<main id="main-container">
+
+		<!-- Das Vorschaubild links -->
+		<aside id="sidebar">
+			<div class="split-button-container">
+				<div class="main-row">
+					<button class="img-select-btn open-files"  data-ordner="false" data-mehrfach="true">
+						&#x1F5CB;<div class="tooltip-box">Bilddatei(en) öffnen</div>
+					</button>
+					<button class="img-select-btn open-folder" data-ordner="true" data-mehrfach="false">
+						&#x1F5C1;<div class="tooltip-box">Ordner öffnen</div>
+					</button>
+				</div>
+				<div class="pager-row">
+					<button class="pager-btn prev-btn" data-schritt="-1">&lt;</button>
+					<div id="img-nummer" class="pager-display">-/-</div>
+					<button class="pager-btn next-btn" data-schritt="1"">&gt;</button>
+				</div>
+			</div>
+
+			<img id="vorschau-bild" src="" style="display:none;" />
+			<div id="bild-info" style="text-align:center;">
+				<span id="img-datum"></span><br>
+				<span id="img-groesse"></span>
+			</div>
+		</aside>
+
+		<!-- Das Formular rechts -->
+		<section id="form-container">
+
+			<div id="ordner-pfad">Kein Bild geladen</div>
+
+			<div class="form-row">
+				<label for="filename">Datei(en):</label>
+				<div id="dynamischerBereich" style="width: 100%;">
+					<!-- Input- / oder Select-Element -->
+				</div>
+				<div class="tooltip-container">
+					<span class="info-icon">ⓘ</span>
+					<div class="tooltip-box">Im Einzelmodus: Änderung des Dateinamens bewirkt Umbenennung der Datei.
+						Im Stapelmodus: Dateinamen sind nicht änderbar.!
+					</div>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<label for="caption">Überschrift:</label>
+				<input type="text" id="caption" name="caption" />
+				<div class="tooltip-container">
+					<span class="info-icon">ⓘ</span>
+					<div class="tooltip-box">Auch: (Dokument-)Titel, Schlagzeile, Headline
+					</div>
+				</div>
+			</div>
+
+			<div class="form-row form-row-top">
+				<label for="description">Beschreibung:</label>
+				<textarea id="description" name="description"></textarea>
+				<div class="tooltip-container">
+					<span class="info-icon">ⓘ</span>
+					<div class="tooltip-box">Beschreibender Text in beliebiger Länge.
+						(Im Stapelmodus wird der eingegebene Text
+						&nbsp;&nbsp; an vorhandenen angehängt.)
+						Hinweis: Einige Programme zeigen nur 2.000 Zeichen
+						&nbsp;&nbsp; oder auch weniger an.
+					</div>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<label for="keywords">Stichwörter:</label>
+				<input type="text" id="keywords" name="keywords" />
+				<div class="tooltip-container">
+					<span class="info-icon">ⓘ</span>
+					<div class="tooltip-box">Komma-separierte Liste. Groß-/Kleinschreibung beachten.
+						Im Stapelmodus werden die eingegebenen Stichwörter
+						&nbsp;&nbsp; an vorhandene angehängt.
+					</div>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<label for="creator">Fotograf:</label>
+				<input type="text" id="creator" name="creator" />
+				<div class="tooltip-container">
+					<span class="info-icon">ⓘ</span>
+					<div class="tooltip-box">Urheber, Ersteller, Autor
+						(Tags: Artitst, Creator, By-line)
+					</div>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<label for="copyright">Copyright:</label>
+				<input type="text" id="copyright" name="copyright" />
+				<div class="tooltip-container">
+					<span class="info-icon">ⓘ</span>
+					<div class="tooltip-box">Urheberrechtshinweis; enthält in der Regel:
+						Name des Fotografen, Aufnahmejahr und Nutzungsrechte;
+						(z.B. 'Copyright [1975] [Mustermann], Alle Rechte vorbehalten')
+					</div>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<label for="editor">Bearbeiter:</label>
+				<input type="text" id="editor" name="editor" />
+				<div class="tooltip-container">
+					<span class="info-icon">ⓘ</span>
+					<div class="tooltip-box">Verfasser der Metadaten
+						(Tags: Caption Writer, Writer Editor)
+					</div>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<label for="position">Standort:</label>
+				<input type="text" id="position" name="position" />
+				<button type="button" class="maps-trigger-btn">Maps</button>
+				<div class="tooltip-container">
+					<span class="info-icon">ⓘ</span>
+					<div class="tooltip-box">GPS-Koordinaten in Dezimalgrad (z.B.: 51.49129, 8.43317).
+						Ermitteln der Koordinaten in der Google Maps-Karte:
+						&nbsp; 1. mit rechter Maustaste auf den Standort klicken,
+						&nbsp; 2. auf die angezeigten Koordinaten klicken,
+						&nbsp; 3. der so gespeicherte Wert kann mit Strg+V
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hier eingefügt werden.
+					</div>
+				</div>
+			</div>
+
+			<!-- Button-Leiste -->
+			<div class="button-group">
+				<div id="copyright">
+					© 2023 H.Fahle, Rüthen
+					<div class="tooltip-box">Dieses Programm ist freie Software unter den Bedingungen der GNU GPLv3.<br>
+						Es wird OHNE JEDE GARANTIE zur Verfügung gestellt. 
+					</div>
+				</div>
+				<button type="button" id="btn-exif-schreiben">Änderungen Schreiben</button>
+			</div>
+
+		</section> <!-- Ende der form-containers-->
+	</main> <!-- Ende des main-containers -->
+
+	<footer id="statusleiste">
+		<div id="status-text">
+			© 2023 H.Fahle, Rüthen<br>
+		</div>
+	</footer>
+
+
+</body>
+
+</html>

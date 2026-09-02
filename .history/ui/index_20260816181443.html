@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Tauri ExifTool Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h3>ExifTool Daten auslesen</h3>
+    
+    <input type="text" id="bildpfad" value="/home/hermann/Desktop/Bilder/Grabstein.jpg">
+
+	<div class="main-container">
+		
+		<!-- Das Vorschaubild links -->
+		<div id="sidebar">
+			<button id="file-open" onclick="exifAuslesen()">Datei öffnen</button>
+			<img id="vorschau-bild" src=""/>
+		</div>
+			
+		<!-- Das Formular rechts -->
+		<form action="" method="post">
+		  <p>
+			<label for="filename">Dateiname:</label>
+			<input type="text" id="filename" name="filename" />
+		  </p>
+		  <p>
+			<label for="caption">Überschrift:</label>
+			<input type="text" id="caption" name="caption" />
+		  </p>
+		  <p>
+			<label for="description">Beschreibung:</label>
+			<textarea id="description" name="description" rows="10"></textarea>
+		  </p>
+		  <p>
+			<label for="keywords">Stichwörter:</label>
+			<input type="text" id="keywords" name="keywords">
+		  </p>
+		  <p>
+			<label for="creator">Fotograf:</label>
+			<input type="text" id="creator" name="creator">
+		  </p>
+		  <p>
+			<label for="copyright">Copyright:</label>
+			<input type="text" id="copyright" name="copyright">
+		  </p>
+		  <p>
+			<label for="editor">Bearbeiter:</label>
+			<input type="text" id="editor" name="editor">
+		  </p>
+		  <p>
+			<label for="position">Standort:</label>
+			<input type="text" id="position" name="position">
+		  </p>
+		  
+			<!-- NEU: Der Speichern-Button am Ende des Formular-Containers -->
+			<div style="text-align: right; margin-top: 15px;">
+				<button onclick="exifSchreiben(event)" style="background: #007BFF; padding: 8px 20px; font-size: 13px;">Änderungen Schreiben</button>
+			</div>
+
+		</form>
+	</div> <!-- Ende des main-containers -->
+    
+    <div id="ausgabe"></div>
+
+    <script>
+
+		async function dateiAuswählen() {
+			try {
+				const ergebnis = await window.__TAURI__.core.invoke('plugin:dialog|open', {
+					options: {
+						title: 'Bilddatei für ExifTool auswählen',
+						directory: false,
+						multiple: false,
+						filters: [
+							{ name: 'Bilder', extensions: ['jpg', 'jpeg', 'png', 'tiff'] }
+						]
+					}
+				});
+
+				// Wenn der Nutzer nicht abgebrochen hat (ergebnis ist nicht null)
+				if (ergebnis) {
+					// Falls das Ergebnis ein Objekt ist (z.B. { path: "..." }), holen wir den Pfad heraus,
+					// ansonsten nehmen wir den String direkt.
+					const pfad = typeof ergebnis === 'object' ? ergebnis.path : ergebnis;
+					
+					document.getElementById("bildpfad").value = pfad;
+					
+					// Sofort automatisch die Metadaten einlesen!
+					exifAuslesen();
+				}
+			} catch (fehler) {
+				document.getElementById("ausgabe").innerHTML = "<span style='color: red;'>Dialog-Fehler: " + fehler + "</span>";
+			}
+		}
+
+        async function exifAuslesen() {
+            const pfad = document.getElementById("bildpfad").value;
+            const ausgabe = document.getElementById("ausgabe");
+            const vorschauImg = document.getElementById("vorschau-bild");
+
+            
+            ausgabe.innerText = "Rufe ExifTool auf...";
+            
+            try {
+                // 1. Metadaten über Rust holen
+                const jsonText = await window.__TAURI__.core.invoke('lese_bild_metdaten', { dateipfad: pfad });
+                const datenObjekt = JSON.parse(jsonText)[0]; 	// Das 1. JSON-Objekt im JSON-Array in JS-Objekt umwandeln
+                
+                document.getElementById('filename').value = datenObjekt.FileName || '';
+                document.getElementById('caption').value = datenObjekt.CMB_Caption || '';
+                document.getElementById('description').value = datenObjekt.Description || '';
+                document.getElementById('keywords').value = datenObjekt.Keywords || '';
+                document.getElementById('creator').value = datenObjekt.Creator || '';
+                document.getElementById('copyright').value = datenObjekt.Copyright || '';
+                document.getElementById('editor').value = datenObjekt.CMB_Editor || '';
+                document.getElementById('position').value = datenObjekt.GPSPosition || '';
+                
+                // Wir nehmen das erste Element der Liste (ExifTool liefert immer ein Array)
+                // und stellen es schön formatiert im Browser dar
+                // ausgabe.innerText = JSON.stringify(datenObjekt[0], null, 2);
+				ausgabe.innerText = jsonText;
+				
+				// 2. DAS VORSCHAUBILD AKTIVIEREN
+				// Wir wandeln den Linux-Pfad in eine sichere Tauri-Asset-URL um
+				// In Tauri v2 sieht das exakt so aus:
+				const assetUrl = window.__TAURI__.core.convertFileSrc(pfad);
+				
+				// Den Link dem Bild-Tag zuweisen und sichtbar machen
+				vorschauImg.src = assetUrl;
+				vorschauImg.style.display = "block";
+                 
+            } catch (fehler) {
+                ausgabe.innerHTML = "<span style='color: red;'>Fehler: " + fehler + "</span>";
+            }
+        }
+
+		async function exifSchreiben(ereignis) {
+			if (ereignis) ereignis.preventDefault();  // verbietet dem Browser den automatischen Seiten-Reset!
+
+			const pfad = document.getElementById("bildpfad").value;
+			const ausgabe = document.getElementById("ausgabe");
+			
+			ausgabe.innerText = "Speichere Daten über ExifTool...";
+			
+			// Wir sammeln alle aktuellen Werte aus den Eingabefeldern ein
+			const daten = {
+				dateipfad: pfad,
+				filename: document.getElementById('filename').value,
+				caption: document.getElementById('caption').value,
+				description: document.getElementById('description').value,
+				keywords: document.getElementById('keywords').value,
+				creator: document.getElementById('creator').value,
+				copyright: document.getElementById('copyright').value,
+				editor: document.getElementById('editor').value,
+				gps: document.getElementById('position').value
+			};
+			
+			try {
+				// Wir schicken das gesamte Paket an die Rust-Funktion 'schreibe_bild_metdaten'
+				const antwort = await window.__TAURI__.core.invoke('schreibe_bild_metdaten', daten);
+				
+				// Bei Erfolg zeigen wir die Meldung in grüner Schrift an
+				ausgabe.innerHTML = "<span style='color: #00ff00;'>" + antwort + "</span>";
+				
+				// 2. Da der Pfad dank preventDefault() jetzt bombenfest im Feld stehen bleibt,
+				// funktioniert das Neuladen nun augenblicklich und fehlerfrei!
+				await exifAuslesen();
+				
+			} catch (fehler) {
+				// Falls etwas schiefgeht (z.B. Datei schreibgeschützt), zeigen wir den Fehler an
+				ausgabe.innerHTML = "<span style='color: red;'>Fehler beim Speichern: " + fehler + "</span>";
+			}
+		}
+
+    </script>
+</body>
+</html>

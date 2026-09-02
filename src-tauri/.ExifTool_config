@@ -1,0 +1,37 @@
+# 1. SCHREIBEN: Über Shortcuts
+%Image::ExifTool::UserDefined::Shortcuts = (
+    CMB_Caption_Set => [
+        'XMP-dc:Title',
+        'IPTC:ObjectName',
+        'XMP-photoshop:Headline',
+        'IPTC:Headline',
+    ],
+    CMB_Editor_Set => [
+    	'XMP:CaptionWriter',
+    	'IPTC:Writer-Editor',
+    ],
+);
+
+# 2. LESEN: Über Composite (berechnet den angezeigten Wert)
+%Image::ExifTool::UserDefined = (
+    'Image::ExifTool::Composite' => {
+        CMB_Caption => {
+            Desire => {
+                0 => 'XMP-dc:Title',
+                1 => 'IPTC:ObjectName',
+                2 => 'XMP-photoshop:Headline',
+                3 => 'IPTC:Headline',
+            },
+            # Zeigt den ersten gefundenen Wert an
+            ValueConv => '$val[0] || $val[1] || $val[2] || $val[3]',
+        },
+        CMB_Editor => {
+            Desire => {
+                0 => 'XMP:CaptionWriter',
+                1 => 'IPTC:Writer-Editor',
+            },
+            ValueConv => '$val[0] || $val[1]',
+        },
+    },
+);
+1;

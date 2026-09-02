@@ -1,0 +1,265 @@
+:root {
+	--app-font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	--app-font-size: 13px;
+}
+
+/* 1. Das App-Fenster exakt auf 100% fixieren (kein äußeres Scrollen) */
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+	width: 100vw;
+	overflow: hidden; /* Verhindert jegliche äußere Scrollbalken */
+	background: #f5f5f5;
+	display: flex;
+	flex-direction: column; /* Hauptinhalt oben, Statusleiste unten */
+	font-family: var(--app-font);
+	font-size: var(--app-font-size);
+}
+
+input, 
+textarea, 
+button, 
+select {
+	font-family: var(--app-font) !important;
+	font-size: var(--app-font-size) !important;
+}
+
+/* Allumfassender Box-Sizing-Fix für die gesamte App */
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+/* 2. Der Hauptbereich füllt den gesamten oberen Platz aus --------------------------- */
+#main-container {
+	flex: 1; 
+	display: flex;
+	flex-direction: row; /* Elemente nebeneinander */
+	gap: 10px;
+	padding: 10px;
+	overflow: hidden; /* Verhindert, dass Riesen-Inhalte das Fenster sprengen */
+}
+
+/* 3. LINKS: Die Sidebar mit fester Breite */
+#sidebar {
+	width: 140px;
+	min-width: 140px; /* Lässt die Sidebar niemals schrumpfen */
+	background-color: #ffffff;
+	border-radius: 8px;
+	padding: 5px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+div#nav {
+	width: 130px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+#vorschau-bild {
+	width: 130px;
+	height: auto;
+}
+
+/* 4. RECHTS: Das Formular nimmt den gesamten Rest ein und wächst mit */
+#form-container {
+	flex: 1; /* Nimmt 100% des restlichen Platzes ein */
+	min-width: 0; /* Erlaubt Flexbox, die Box bei Bedarf zu verkleinern */
+	background-color: #ffffff;
+	border-radius: 8px;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#ordner-pfad {
+	margin-left: 95px !important;
+	color: #777777;
+}
+
+/* Jede Zeile wird zu einer horizontalen Flexbox */
+.form-row {
+	display: flex !important;
+	flex-direction: row;
+	align-items: center; /* Richtet Label und Input vertikal mittig zueinander aus */
+	gap: 10px;           /* Abstand zwischen Label und Input */
+	width: 100%;
+}
+
+/* Die Labels bekommen eine feste Breite, damit alle Inputs sauber untereinander starten */
+.form-row label {
+	width: 95px;         /* Breite je nach längstem Label-Text anpassen */
+	min-width: 95px;     /* Verhindert, dass das Label zusammengedrückt wird */
+	text-align: right;   /* Optional: Richtet den Text rechtsbündig zum Input aus */
+	font-weight: bold;
+	margin-left: -12px;
+}
+
+/* Die Eingabefelder füllen jetzt den gesamten restlichen Platz der Zeile aus */
+.form-row input, 
+.form-row textarea {
+	flex: 1;             /* Zwingt das Input-Feld, den Rest der Zeile einzunehmen */
+	width: 100%;
+	min-width: 0;        /* Erlaubt dem Input, bei sehr kleinen Fenstern stabil zu schrumpfen */
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 2px;
+	-webkit-font-smoothing: antialiased;
+}
+.form-row textarea {
+	min-height: 140px;
+}
+
+/* Ändert die Ausrichtung für die Textarea-Zeile nach oben */
+.form-row-top {
+	align-items: flex-start !important; /* Richtet Label, Textarea und Icon oben aus */
+}
+.form-row-top label,
+.form-row-top .tooltip-container {
+	padding-top: 6px; /* Verhindert, dass das Label zu weit oben klebt */
+}
+
+
+/* 5. UNTEN: Die Statusleiste mit fixer Höhe und eigenem Scrollbalken */
+#statusleiste {
+	height: 30px;  /* Feste Höhe für ca. 2 Zeilen Text */
+	min-height: 30px;
+	border-top: 1px solid #bbb;
+	background-color: #ddd;
+	font-size: 11px;
+	color: #444;
+	padding: 0 2px;
+	overflow-y: auto;  /* Vertikaler Scrollbalken erscheint NUR bei Bedarf */
+	overflow-x: hidden;  /* Verhindert horizontales Scrollen in der Statusleiste */
+	-webkit-font-smoothing: antialiased;
+}
+
+
+/* Bedien-Elemente -------------------------------------------- */
+button {
+	padding: 3px 10px;
+	font-weight: bold;
+	cursor: pointer;
+	background: #007acc;
+	color: white;
+	border: none;
+	border-radius: 4px;
+}
+button:hover {
+	background-color: #0062a3;
+}
+
+/* Container hält die Buttons und das Dropdown zusammen */
+.split-button-container {
+	display: inline-flex;
+	position: relative;
+	width:130px; height: 25px;
+	margin-bottom: 3px;
+}
+.open-files, 
+.open-folder {
+	border: none;
+	border-radius: 0;
+	padding: 0;
+	font-size: 18px !important;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+.open-files {
+	width: 70%;
+	border-top-left-radius: 6px;
+	border-bottom-left-radius: 6px;
+	border-right: 1px solid rgba(255, 255, 255, 0.2); /* Feine Trennlinie */
+}
+.open-folder {
+	width: 30%;
+	font-weight: bold;
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+
+
+button.blaettern {
+	border: 1px solid gray;
+	color: gray;
+	background-color: white;
+}
+
+/* Der Absendeknopf richtet sich nach den Eingabefeldern aus */
+.button-group {
+	display: flex;
+	justify-content: flex-end;
+	margin: 10px 24px 0 0;
+}
+
+.button-group button {
+	margin-left: 5px;
+}
+
+
+/* Tooltip ---------------------------------------------------------- */
+
+/* Container für das Icon und die Box */
+.tooltip-container {
+	position: relative; /* Wichtig, damit sich die Box am Icon ausrichtet */
+	display: inline-flex;
+	align-items: center;
+	cursor: help;       /* Zeigt das Fragezeichen/Hilfe-Symbol als Mauszeiger */
+	margin-left: -6px;
+}
+
+/* Das Info-Icon selbst */
+.info-icon {
+	color: #0066cc;     /* Schönes Info-Blau */
+	padding: 0 4px;
+	font-size: 13px;
+}
+
+/* Die selbstdefinierte Tooltip-Box (Standardmäßig versteckt) */
+.tooltip-box {
+	position: absolute;
+	bottom: 125%;       /* Platziert die Box direkt ÜBER dem Icon */
+	right: 0;           /* Richtet die Box am rechten Rand des Icons aus */
+
+	width: max-content;
+	max-width: 400px;      /* Verhindert, dass der Tooltip bei sehr viel Text das Fenster sprengt */
+	white-space: pre-line;
+
+	background-color: lightyellow;
+	color: black;
+	border: 1px solid gray;
+	padding: 2px 4px;
+	border-radius: 6px;
+	font-size: 11px;
+	line-height: 1.4;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+	z-index: 1001;      /* Über der Statusleiste (1000), falls sie sich überschneiden */
+	
+	/* Animation & Verstecken */
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.2s ease-in-out, visibility 0.2s;
+	pointer-events: none; /* Verhindert, dass die Box beim unabsichtlichen Drüberfahren flackert */
+}
+
+/* Der kleine Pfeil unten an der Tooltip-Box (Optional) */
+.tooltip-box::after {
+	content: "";
+	position: absolute;
+	top: 100%;          /* Am unteren Rand der Box */
+	right: 8px;         /* Ausrichtung passend zum Icon */
+	border-width: 5px;
+	border-style: solid;
+	border-color: #333333 transparent transparent transparent;
+}
+
+/* HOVER-EFFEKT: Wenn man über das Icon ODER den Container fährt, wird die Box sichtbar */
+.tooltip-container:hover .tooltip-box {
+	opacity: 1;
+	visibility: visible;
+}
+

@@ -1,0 +1,262 @@
+body {
+	font-family: sans-serif;
+	font-size: 12px;
+	padding: 3px 10px;
+	background: #f5f5f5;
+}
+
+button {
+	padding: 0px 10px 2px 10px;
+	font-size: 12px;
+	cursor: pointer;
+	background: #28a745;
+	color: white;
+	border: none;
+	border-radius: 4px;
+}
+
+select {
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
+	border: none;
+	border-radius: 4px;
+	background: #28a745;
+	color: white;
+	width: 120px;
+}
+
+#ausgabe {
+	margin-top: 20px;
+	background: #222;
+	color: #00ff00;
+	padding: 5px;
+	border-radius: 5px;
+	font-family: monospace;
+	white-space: pre-wrap;
+	overflow-x: auto;
+}
+
+input#bildpfad {
+	width: 350px;
+}
+
+/* Der neue Haupt-Container für die Nebeneinander-Ausrichtung */
+.main-container {
+	margin-top: 10px;
+	display: flex;
+	flex-direction: row;
+	/* Elemente nebeneinander */
+	gap: 10px;
+	/* Abstand zwischen Bild und Formular */
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* Styling für den Bild-Bereich */
+#sidebar {
+	width: 130px;
+	min-width: 130px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	padding: 5px;
+	background-color: #ffffff;
+	border-radius: 8px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#file-open {
+	width: 130px;
+	margin-bottom: 10px;
+}
+
+#vorschau-bild {
+	width: 130px;
+	height: auto;
+	border: 1px outset gray;
+}
+
+/* Container des Formulars */
+#mein-formular-container {
+	flex-grow: 1;
+	margin: 0;
+	padding: 5px 10px;
+	background-color: #ffffff;
+	border-radius: 8px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	font-family: Arial, sans-serif;
+}
+
+#mein-formular-container div {
+	display: flex;
+	align-items: center;
+	margin: 6px 0;
+	/* Geringer Zeilenabstand */
+	width: 100%;
+	margin-top: 5px;
+	/* Kleiner Abstand nach oben */
+	margin-bottom: 5px;
+	/* Kleiner Abstand nach unten */
+}
+
+label[for="description"] {
+	align-self: flex-start;
+	/* DIESE ZEILE IST DIE RETTUNG: Richtet NUR dieses Label oben aus! */
+	margin-top: 4px;
+	/* Feinjustierung, damit es perfekt auf der Linie der ersten Textzeile liegt */
+}
+
+#ordner-pfad {
+	margin-left: 97px;
+	margin-bottom: 2px;
+	color: #777777;
+	font-size: 12px;
+	font-family: Arial, sans-serif;
+}
+
+/* Feste Breite für die Labels + Linksbündig */
+label {
+	display: inline-block;
+	width: 95px;
+	text-align: left;
+	font-weight: bold;
+	color: #333333;
+	flex-shrink: 0;
+	/* Verhindert, dass der Text zusammengedrückt wird */
+}
+
+/* Eingabefelder füllen den restlichen Platz der Zeile aus */
+input[type="text"],
+textarea {
+	flex-grow: 1;
+	/* Alle Felder starten exakt an der gleichen Linie */
+	width: 100%;
+	min-width: 0;
+	padding: 2px;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+	font-size: 12px;
+}
+
+textarea {
+	/* DIESE BEIDEN ZEILEN LÖSEN DAS LINUX-PROBLEM ENDGÜLTIG: */
+	field-sizing: content;
+	/* Die Box wächst automatisch zeilenweise mit! */
+	overflow: hidden;
+	/* Schaltet Scrollbalken und damit den Bug komplett ab */
+	resize: none;
+	/* Der Nutzer muss nicht mehr manuell ziehen */
+}
+
+/* Aktives Feld bei Klick */
+input:focus,
+textarea:focus {
+	border-color: #007BFF;
+	outline: none;
+	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.tooltipx {
+  position: relative;
+  z-index: 1;
+}
+/* Tooltip-Box beim Hover anzeigen */
+.tooltipx:hover::after {
+  z-index: 999;
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -130%;  /* unterhalb */
+  left: 50%;	/* nach rechts versetzt */
+  transform: translateX(-50%);
+  background-color: lightyellow;
+  color: black;
+  padding: 5px 10px;
+  border: 1px solid gray;
+  border-radius: 4px;
+  white-space: pre;
+  width: max-content;
+  font-size: 10px;
+}
+
+.tooltip {
+  position: relative;
+  display: block;
+  margin-bottom: 15px;
+  /* Wichtig: Standard-Ebene für alle Zeilen */
+  z-index: 1; 
+}
+.tooltip:focus-within {
+  z-index: 10;
+}
+
+/* Wenn die Maus drüber ist oder getippt wird, MUSS diese Zeile über allen anderen liegen */
+.tooltip:hover,
+.tooltip:has(input:focus) {
+  z-index: 9999 !important;
+}
+.tooltip:hover {
+  z-index: 99999 !important;
+}
+/* Der Tooltip selbst */
+.tooltip:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  
+  /* Vertikale Positionierung (unten) */
+  top: 50%;          
+  margin-top: 8px;    
+  bottom: auto;       
+  
+  /* Horizontale Positionierung (an deiner Label-Breite) */
+  left: 105px;        /* Hier wieder deine Label-Breite eintragen */
+  right: auto;
+  transform: none;
+  
+  /* Styling & Farben */
+  background-color: #333333; 
+  color: #ffffff;            
+  padding: 2px 4px;
+  background-color: lightyellow;
+  color: black;
+  border: 1px solid gray;
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1.4;
+  
+  /* Dynamische Breite */
+  white-space: pre;       
+  width: max-content;     
+
+  /* DIE RETTUNG FÜR DEN Z-INDEX: */
+  z-index: 100000; 
+  pointer-events: none; /* Verhindert, dass der Tooltip Maus-Klicks oder Hovers abfängt */
+}
+
+/* Der Absendeknopf richtet sich nach den Eingabefeldern aus */
+.button-group {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.button-group button {
+		margin-left: 5px;
+}
+
+button[type="submit"] {
+	width: 200px;
+	padding: 12px;
+	background-color: #007BFF;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+	background-color: #0056b3;
+}

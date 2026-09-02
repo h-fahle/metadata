@@ -1,0 +1,57 @@
+#!/bin/bash
+set -e
+
+# Das Skript darf nur beim vollständigen Entfernen (remove/purge) laufen
+if [ "$1" = "remove" ] || [ "$1" = "purge" ]; then
+
+    echo "# Cleaning up custom setup..."
+
+    # 1. Benutzer ermitteln (identisch zum postinst-Skript)
+    REAL_USER="${SUDO_USER:-$(logname 2>/dev/null || who | awk 'NR==1 {print $1}')}"
+
+    echo "# Executing cleanup for user: $REAL_USER"
+
+    if [ -n "$REAL_USER" ] && [ "$REAL_USER" != "root" ]; then
+
+        # 2. Thunar-Aktion entfernen
+        if [ -x /usr/share/metadata/setup-thunar.sh ]; then
+            # Falls das Skript noch da ist, nutzen wir es zum Aufräumen
+            runuser -u "$REAL_USER" -- /usr/share/metadata/setup-thunar.sh --clean >/dev/null 2>&1 || true
+        fi
+
+        # 3. Desktop-Ordner ermitteln
+        DESKTOP_DIR=""
+        if command -v xdg-user-dir >/dev/null 2>&1; then
+            DESKTOP_DIR=$(runuser -u "$REAL_USER" -- xdg-user-dir DESKTOP 2>/dev/null || true)
+        fi
+
+        if [ -z "$DESKTOP_DIR" ]; then
+            USER_HOME=$(getent passwd "$REAL_USER" | cut -d: -f6 || true)
+            if [ -d "$USER_HOME/Schreibtisch" ]; then
+                DESKTOP_DIR="$USER_HOME/Schreibtisch"
+            elif [ -d "$USER_HOME/Desktop" ]; then
+                DESKTOP_DIR="$USER_HOME/Desktop"
+            fi
+        fi
+
+        # 4. Desktop-Starter löschen und Desktop aktualisieren
+        if [ -n "$DESKTOP_DIR" ] && [ -d "$DESKTOP_DIR" ]; then
+            TARGET="$DESKTOP_DIR/metadaten-editor.desktop"
+            
+            if [ -f "$TARGET" ]; then
+                rm -f "$TARGET" 2>/dev/null || true
+                echo "# Desktop-Starter removed!"
+
+                # Desktop-Ansicht für den Benutzer aktualisieren
+                if command -v xfdesktop >/dev/null 2>&1; then
+                    runuser -u "$REAL_USER" -- dbus-launch --exit-with-session xfdesktop --reload >/dev/null 2>&1 || true
+                fi
+            fi
+        fi
+    fi
+
+    echo "# Cleanup done!"
+
+fi
+
+exit 0

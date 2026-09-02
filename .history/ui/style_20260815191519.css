@@ -1,0 +1,152 @@
+body {
+	font-family: sans-serif; 
+	font-size:12px; 
+	padding: 10px; 
+	background: #f5f5f5;
+}
+
+button {
+	margin: {5px 0};
+	padding: 5px; 
+	font-size: 14px; 
+	cursor: pointer; 
+	background: #28a745; 
+	color: white; 
+	border: none; 
+	border-radius: 4px; }
+	
+#ausgabe {
+	margin-top: 20px; 
+	background: #222; 
+	color: #00ff00; 
+	padding: 5px; 
+	border-radius: 5px; 
+	font-family: monospace; 
+	white-space: pre-wrap; 
+	overflow-x: auto;
+}
+input#bildpfad {
+	width: 350px;
+}
+
+.main-container-old {
+	width: 150px; 
+	border: 1px solid #ccc; 
+	align-items: center; 
+	justify-content: 
+	center; background: #eaeaea;
+}
+
+/* Der neue Haupt-Container für die Nebeneinander-Ausrichtung */
+.main-container {
+	display: flex;
+	flex-direction: row;  /* Elemente nebeneinander */
+	gap: 20px;            /* Abstand zwischen Bild und Formular */
+	width: 100%
+	box-sizing: border-box;
+}
+
+/* Styling für den Bild-Bereich */
+.image-preview {
+	max-width: 300px;     /* Maximale Breite des Bildes links */
+	flex-shrink: 0;       /* Bild wird nicht zusammengedrückt */
+}
+
+
+#bild-vorschau {
+	max-width: 100%; 
+	max-height: 100%; 
+	object-fit: contain; 
+	display: none;
+}
+.image-preview img {
+	width: 100%;          /* Nutzt die 300px voll aus */
+	height: auto;         /* Behält das richtige Seitenverhältnis */
+	border-radius: 8px;   /* Schöne abgerundete Ecken */
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Gleicher Schatten wie das Formular */
+}
+
+
+/* Container des Formulars */
+form {
+	flex-grow: 1;
+	margin: 0;
+	padding: 10px;
+	background-color: #ffffff;
+	border-radius: 8px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	font-family: Arial, sans-serif;
+}
+
+form p {
+	display: flex;
+	align-items: center; 
+	margin: 6px 0;       /* Geringer Zeilenabstand */
+	width: 100%;
+	margin-top: 5px;    /* Kleiner Abstand nach oben */
+	margin-bottom: 5px; /* Kleiner Abstand nach unten */
+}
+
+/* Feste Breite für die Labels + Linksbündig */
+label {
+	display: inline-block;
+	width: 110px; 
+	text-align: left;
+	font-weight: bold;
+	color: #333333;
+	flex-shrink: 0; /* Verhindert, dass der Text zusammengedrückt wird */
+}
+label[for="description"] {
+	vertical-align: top;
+	margin-top: 3px; /* Schiebt das Label minimal nach unten, damit es perfekt synchron zur ersten Textzeile steht */
+}
+
+/* Eingabefelder füllen den restlichen Platz der Zeile aus */
+input[type="text"],
+textarea {
+	flex-grow: 1; /* Alle Felder starten exakt an der gleichen Linie */
+	width: 100%;
+	min-width: 0;
+	padding: 2px;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+	font-size: 12px;
+}
+textarea {
+    /* DIESE BEIDEN ZEILEN LÖSEN DAS LINUX-PROBLEM ENDGÜLTIG: */
+    field-sizing: content;   /* Die Box wächst automatisch zeilenweise mit! */
+    overflow: hidden;        /* Schaltet Scrollbalken und damit den Bug komplett ab */
+    resize: none;            /* Der Nutzer muss nicht mehr manuell ziehen */
+}
+
+/* Aktives Feld bei Klick */
+input:focus,
+textarea:focus {
+	border-color: #007BFF;
+	outline: none;
+	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Der Absendeknopf richtet sich nach den Eingabefeldern aus */
+.button-group {
+	display: flex;
+	justify-content: flex-end;
+}
+
+button[type="submit"] {
+	/* Der Button hat genau dieselbe Breite und Position wie die Felder darüber */
+	width: calc(100% - 125px); /* Formularbreite minus Label (110px) und Gap (15px) */
+	padding: 12px;
+	background-color: #007BFF;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+	background-color: #0056b3;
+}

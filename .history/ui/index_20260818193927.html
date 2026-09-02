@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Tauri ExifTool Test</title>
+	<script src="script.js"></script>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+	<div class="main-container">
+
+		<!-- Das Vorschaubild links -->
+		<div id="sidebar">
+			
+			<button id="file-open" onclick="dateiAuswählen()">Datei öffnen</button>
+
+			<div style="margin: 0;">
+				<button onclick="blaettern(-1)">◄</button>
+				<span id="img-nummer">1/1</span>
+				<button onclick="blaettern(1)">►</button>
+			</div>
+
+<!-- 		<select id="menue-oeffnen" onchange="menueAktion(this)" >
+				<option value="dateien">🖼️ Bilder öffnen...</option>
+				<option value="ordner">📁 Ordner öffnen...</option>
+			</select>
+ -->
+			<img id="vorschau-bild" src="" style="display:none;" />
+			<div id="bild-info" style="text-align:center;">
+				<span id="img-datum"></span><br>
+				<span id="img-groesse"></span>
+			</div>
+		</div>
+
+		<!-- Das Formular rechts -->
+		<div id="mein-formular-container">
+
+			<div id="ordner-pfad">Kein Bild geladen</div>
+
+			<div class="tooltip" data-tooltip=
+"Im Einzelmodus: Änderung des Dateinamens bewirkt
+   Umbenennung der Datei.
+Im Stapelmodus: Ordnername is nicht änderbar.!">
+				<label for="filename">Dateiname:</label>
+				<input type="text" id="filename" name="filename"/>
+			</div>
+
+			<div class="tooltip" data-tooltip=
+"Auch: (Dokument-)Titel, Schlagzeile, Headline">
+				<label for="caption">Überschrift:</label>
+				<input type="text" id="caption" name="caption"/>
+			</div>
+
+			<div class="tooltip" data-tooltip=
+"Beschreibender Text in beliebiger Länge.
+(Im Stapelmodus wird der eingegebene Text
+   an vorhandenen angehängt.)
+Hinweis: Einige Programme zeigen nur 2.000 Zeichen
+   oder auch weniger an.">
+				<label for="description">Beschreibung:</label>
+				<textarea id="description" name="description" style="min-height: 60px;"></textarea>
+			</div>
+
+			<div class="tooltip" data-tooltip=
+"Komma-separierte Liste. Groß-/Kleinschreibung beachten.
+Im Stapelmodus werden die eingegebenen Stichwörter
+   an vorhandene angehängt.">
+				<label for="keywords">Stichwörter:</label>
+				<input type="text" id="keywords" name="keywords"/>
+			</div>
+
+			<div class="tooltip" data-tooltip=
+"Urheber, Ersteller, Autor
+(Tags: Artitst, Creator, By-line)">
+				<label for="creator">Fotograf:</label>
+				<input type="text" id="creator" name="creator"/>
+			</div>
+
+			<div class="tooltip" data-tooltip=
+"Urheberrechtshinweis; enthält in der Regel:
+Name des Fotografen, Aufnahmejahr und Nutzungsrechte;
+(z.B. 'Copyright [1975] [Mustermann], Alle Rechte vorbehalten')">
+				<label for="copyright">Copyright:</label>
+				<input type="text" id="copyright" name="copyright"/>
+			</div>
+
+			<div class="tooltip" data-tooltip=
+"Verfasser der Metadaten
+(Tags: Caption Writer, Writer Editor)">
+				<label for="editor">Bearbeiter:</label>
+				<input type="text" id="editor" name="editor"/>
+			</div>
+
+			<div class="tooltip" data-tooltip=
+"GPS-Koordinaten in Dezimalgrad (51.49129, 8.43317).
+Ermitteln der Koordinaten in der Google Maps-Karte:
+  1. mit rechter Maustaste auf den Standort klicken,
+  2. auf die angezeigten Koordinaten klicken,
+  3. der so gespeicherte Wert kann dann mit Strg+V
+     kopiert werden.">
+				<label for="position">Standort:</label>
+				<input type="text" id="position" name="position"/>
+			</div>
+
+			<!-- Button-Leiste -->
+			<div class="button-group" style="text-align: right; margin-top: 15px;">
+				<button type="button" onclick="zeigeMaps(event)" style="background: #007BFF;">Maps</button>
+				<button type="button" onclick="exifSchreiben(event)" style="background: #007BFF;">Änderungen Schreiben</button>
+			</div>
+
+		</div>
+	</div> <!-- Ende des main-containers -->
+
+	<div id="ausgabe"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,254 @@
+/* 1. Das App-Fenster exakt auf 100% fixieren (kein äußeres Scrollen) */
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+	width: 100vw;
+	overflow: hidden; /* Verhindert jegliche äußere Scrollbalken */
+	background: #f5f5f5;
+	font-family: sans-serif;
+	font-size: 12px;
+	display: flex;
+	flex-direction: column; /* Hauptinhalt oben, Statusleiste unten */
+}
+
+/* Allumfassender Box-Sizing-Fix für die gesamte App */
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+/* 2. Der Hauptbereich füllt den gesamten oberen Platz aus */
+#main-container {
+	flex: 1; 
+	display: flex;
+	flex-direction: row; /* Elemente nebeneinander */
+	gap: 10px;
+	padding: 10px;
+	overflow: hidden; /* Verhindert, dass Riesen-Inhalte das Fenster sprengen */
+}
+
+/* 3. LINKS: Die Sidebar mit fester Breite */
+#sidebar {
+	width: 140px;
+	min-width: 140px; /* Lässt die Sidebar niemals schrumpfen */
+	background-color: #ffffff;
+	border-radius: 8px;
+	padding: 5px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 4. RECHTS: Das Formular nimmt den gesamten Rest ein und wächst mit */
+#form-container {
+	flex: 1; /* Nimmt 100% des restlichen Platzes ein */
+	min-width: 0; /* Erlaubt Flexbox, die Box bei Bedarf zu verkleinern */
+	background-color: #ffffff;
+	border-radius: 8px;
+	padding: 15px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+	
+/* 5. UNTEN: Die Statusleiste mit fixer Höhe und eigenem Scrollbalken */
+#statusleiste {
+	height: 60px; /* Feste Höhe für ca. 3 Zeilen Text */
+	min-height: 60px;
+	background-color: lightgray;
+	color: black;
+	padding: 5px 16px;
+	overflow-y: auto; /* Vertikaler Scrollbalken erscheint NUR bei Bedarf */
+	overflow-x: hidden; /* Verhindert horizontales Scrollen in der Statusleiste */
+}
+
+div#nav {
+	width: 130px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+#vorschau-bild {
+	width: 130px;
+	height: auto;
+	border: 1px outset gray;
+}
+
+
+/* Container des Formulars ----------------------------------------- */
+#mein-formular-container {
+	flex-grow: 1;
+	margin: 0;
+	padding: 5px 10px;
+	background-color: #ffffff;
+	border-radius: 8px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	font-family: Arial, sans-serif;
+}
+
+#mein-formular-container div {
+	display: flex;
+	align-items: center;
+	margin: 6px 0;
+	/* Geringer Zeilenabstand */
+	width: 100%;
+	margin-top: 5px;
+	/* Kleiner Abstand nach oben */
+	margin-bottom: 5px;
+	/* Kleiner Abstand nach unten */
+}
+
+#ordner-pfad {
+	margin-left: 97px !important;
+	color: #777777;
+}
+
+
+/* Bedien-Elemente -------------------------------------------- */
+button {
+	padding: 0px 10px 2px 10px;
+	cursor: pointer;
+	background: #28a745;
+	color: white;
+	border: none;
+	border-radius: 4px;
+}
+
+button#file-open {
+	width: 130px;
+	margin-bottom: 3px;
+}
+
+button.blaettern {
+	border: 1px solid gray;
+	color: gray;
+	background-color: white;
+}
+
+/* Der Absendeknopf richtet sich nach den Eingabefeldern aus */
+.button-group {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.button-group button {
+	margin-left: 5px;
+}
+
+select {
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
+	border: none;
+	border-radius: 4px;
+	background: #28a745;
+	color: white;
+	width: 120px;
+}
+
+
+/* Formular-Elemente ---------------------------------------------------------- */
+
+label[for="description"] {
+	align-self: flex-start;
+	/* DIESE ZEILE IST DIE RETTUNG: Richtet NUR dieses Label oben aus! */
+	margin-top: 4px;
+	/* Feinjustierung, damit es perfekt auf der Linie der ersten Textzeile liegt */
+}
+
+/* Feste Breite für die Labels + Linksbündig */
+label {
+	display: inline-block;
+	width: 95px;
+	text-align: left;
+	font-weight: bold;
+	color: #333333;
+	flex-shrink: 0;
+	/* Verhindert, dass der Text zusammengedrückt wird */
+}
+
+/* Eingabefelder füllen den restlichen Platz der Zeile aus */
+input[type="text"],
+textarea {
+	flex-grow: 1;
+	/* Alle Felder starten exakt an der gleichen Linie */
+	width: 100%;
+	min-width: 0;
+	padding: 2px;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+textarea {
+	/* DIESE BEIDEN ZEILEN LÖSEN DAS LINUX-PROBLEM ENDGÜLTIG: */
+	height: 120px;
+	-webkit-font-smoothing: antialiased
+}
+
+/* Aktives Feld bei Klick */
+input:focus,
+textarea:focus {
+	border-color: #007BFF;
+	outline: none;
+	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.tooltip {
+	position: relative;
+	display: block;
+	margin-bottom: 15px;
+	/* Wichtig: Standard-Ebene für alle Zeilen */
+	z-index: 1;
+}
+
+.tooltip:focus-within {
+	z-index: 10;
+}
+
+/* Wenn die Maus drüber ist oder getippt wird, MUSS diese Zeile über allen anderen liegen */
+.tooltip:hover,
+.tooltip:has(input:focus) {
+	z-index: 9999 !important;
+}
+
+.tooltip:hover {
+	z-index: 99999 !important;
+}
+
+/* Der Tooltip selbst */
+.tooltip:hover::after {
+	content: attr(data-tooltip);
+	position: absolute;
+
+	/* Vertikale Positionierung (unten) */
+	top: 50%;
+	margin-top: 8px;
+	bottom: auto;
+
+	/* Horizontale Positionierung (an deiner Label-Breite) */
+	left: 105px;
+	/* Hier wieder deine Label-Breite eintragen */
+	right: auto;
+	transform: none;
+
+	/* Styling & Farben */
+	background-color: #333333;
+	color: #ffffff;
+	padding: 2px 4px;
+	background-color: lightyellow;
+	color: black;
+	border: 1px solid gray;
+	border-radius: 4px;
+	font-size: 11px;
+	line-height: 1.4;
+
+	/* Dynamische Breite */
+	white-space: pre;
+	width: max-content;
+
+	/* DIE RETTUNG FÜR DEN Z-INDEX: */
+	z-index: 100000;
+	pointer-events: none;
+	/* Verhindert, dass der Tooltip Maus-Klicks oder Hovers abfängt */
+}
