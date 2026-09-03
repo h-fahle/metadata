@@ -14,25 +14,15 @@ jobs:
           toolchain: stable
           targets: i686-pc-windows-msvc
 
-      # 1. Rust-Cache für deine App-Abhängigkeiten
-      - name: Rust Cache einrichten
-        uses: swatinem/rust-cache@v2
-        with:
-          key: i686-pc-windows-msvc
+      - name: Tauri-CLI global installieren
+        run: cargo install tauri-cli --version "^2.0.0"
 
-      # 2. cargo-binstall installieren (lädt fertige Rust-Binaries herunter)
-      - name: cargo-binstall installieren
-        uses: cargo-bins/cargo-binstall-action@v1.10.0
-
-      # 3. Tauri-CLI als vorgebautes Binary herunterladen (~5 Sekunden statt 15 Min.)
-      - name: Tauri-CLI installieren
-        run: cargo binstall tauri-cli --version "^2.0.0" -y
-
-      # 4. Build mit der nativen Tauri-CLI ausführen
       - name: Anwendung nativ kompilieren
         run: cargo tauri build --target i686-pc-windows-msvc --no-bundle
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CARGO_BUILD_JOBS: 2
+          RUSTFLAGS: "-C codegen-units=1 -C opt-level=1"
 
       - name: Fertiges ZIP-Paket bereitstellen
         uses: actions/upload-artifact@v4
