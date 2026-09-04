@@ -11,6 +11,12 @@ const invoke = window.__TAURI__.core.invoke;
 
 document.addEventListener('DOMContentLoaded', async () => {
 
+    requestAnimationFrame(() => {
+        requestAnimationFrame(async () => {
+            await resizeWindowToContent();
+        });
+    });
+
     // Alle Buttons mit der Klasse "pager-btn" auswählen
     const pagerButtons = document.querySelectorAll('.pager-btn');
     pagerButtons.forEach(button => {
@@ -129,6 +135,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 aktualisiereEingabeBereich("datei", "");
+
+async function resizeWindowToContent() {
+    if (window.__TAURI__) {
+        const { getCurrentWindow, LogicalSize } = window.__TAURI__.window;
+
+        // Gewünschte Breite (fest oder dynamisch)
+        const fixedWidth = 850;
+
+        // Höhe deines HTML-Inhalts ermitteln
+        const contentHeight = document.body.offsetHeight;
+        const totalHeight = 520;
+        const appWindow = getCurrentWindow();
+        await appWindow.setSize(new LogicalSize(fixedWidth, totalHeight));
+    }
+}
 
 async function ladeOrdnerBilder(pfad) {
     try {

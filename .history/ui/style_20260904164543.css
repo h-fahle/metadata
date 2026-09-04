@@ -75,7 +75,6 @@ button {
 /* Kachel 2: Bild + Info-Text darunter */
 #preview-card {
 	flex: 1;   /* gesamte restliche Höhe */
-	min-height: 0;
 	background-color: #ffffff;
 	border-radius: 8px;
 	padding: 5px;
@@ -83,28 +82,12 @@ button {
 	text-align:center;
 	font-size: 12px;
 	color: gray;
-
-	/* Als Flexbox definieren, damit das Bild flexibel skaliert */
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: flex-start;
-	overflow: hidden;        /* Verhindert Überlappen beim Verkleinern */
 }
 
 #vorschau-bild {
 	max-width: 130px;
-	width: auto;
-	height: auto;
-	min-height: 0;           /* NEU: Erlaubt dem Bild, bis auf 0px zu schrumpfen */
-	flex-shrink: 1;          /* NEU: Bild gibt als Erstes nach, wenn Platz knapp wird */
-	object-fit: contain;     /* Behält das Seitenverhältnis exakt bei */
 	margin: 2px auto;
-}
-
-#bild-info {
-	flex-shrink: 0;          /* NEU: Zwingt den Text, IMMER vollständig sichtbar zu bleiben */
-	padding-top: 2px;
+	height: auto;
 }
 
 /* ------------------------------------------------------------------------------------- */
@@ -227,8 +210,7 @@ input#filename {
 	align-items: flex-start !important;
 	/* Richtet Label, Textarea und Icon oben aus */
 	flex: 1;         /* NEU: Nimmt den freien Platz im form-container ein */
-	min-height: 22px;
-	overflow: hidden
+	min-height: 0;
 }
 
 .form-row-top label,

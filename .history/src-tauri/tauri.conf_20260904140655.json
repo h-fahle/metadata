@@ -14,8 +14,7 @@
     "windows": [
       {
         "title": "Metadaten Editor",
-        "width": 800,
-        "height": 520,
+        "width": 850,
         "resizable": true,
         "fullscreen": false,
         "visible": false

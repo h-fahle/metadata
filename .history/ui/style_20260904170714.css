@@ -88,23 +88,17 @@ button {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: flex-start;
+	justify-content: center;
 	overflow: hidden;        /* Verhindert Überlappen beim Verkleinern */
 }
 
 #vorschau-bild {
 	max-width: 130px;
+	max-height: 100%;
+	margin: 2px auto;
 	width: auto;
 	height: auto;
-	min-height: 0;           /* NEU: Erlaubt dem Bild, bis auf 0px zu schrumpfen */
-	flex-shrink: 1;          /* NEU: Bild gibt als Erstes nach, wenn Platz knapp wird */
-	object-fit: contain;     /* Behält das Seitenverhältnis exakt bei */
-	margin: 2px auto;
-}
-
-#bild-info {
-	flex-shrink: 0;          /* NEU: Zwingt den Text, IMMER vollständig sichtbar zu bleiben */
-	padding-top: 2px;
+	object-fit: contain;
 }
 
 /* ------------------------------------------------------------------------------------- */

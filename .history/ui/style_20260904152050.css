@@ -8,8 +8,9 @@ html,
 body {
 	margin: 0;
 	padding: 0;
-	height: 100vh;
-	width: 100vw;
+	/* height: 100vh; */
+	/* width: 100vw; */
+	height: auto;
 	overflow: hidden;
 	/* Verhindert jegliche äußere Scrollbalken */
 	background: #f5f5f5;
@@ -60,7 +61,6 @@ button {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
-	min-height: 0;
 }
 
 /* Kachel 1: Button-Container */
@@ -75,7 +75,6 @@ button {
 /* Kachel 2: Bild + Info-Text darunter */
 #preview-card {
 	flex: 1;   /* gesamte restliche Höhe */
-	min-height: 0;
 	background-color: #ffffff;
 	border-radius: 8px;
 	padding: 5px;
@@ -83,28 +82,12 @@ button {
 	text-align:center;
 	font-size: 12px;
 	color: gray;
-
-	/* Als Flexbox definieren, damit das Bild flexibel skaliert */
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: flex-start;
-	overflow: hidden;        /* Verhindert Überlappen beim Verkleinern */
 }
 
 #vorschau-bild {
 	max-width: 130px;
-	width: auto;
-	height: auto;
-	min-height: 0;           /* NEU: Erlaubt dem Bild, bis auf 0px zu schrumpfen */
-	flex-shrink: 1;          /* NEU: Bild gibt als Erstes nach, wenn Platz knapp wird */
-	object-fit: contain;     /* Behält das Seitenverhältnis exakt bei */
 	margin: 2px auto;
-}
-
-#bild-info {
-	flex-shrink: 0;          /* NEU: Zwingt den Text, IMMER vollständig sichtbar zu bleiben */
-	padding-top: 2px;
+	height: auto;
 }
 
 /* ------------------------------------------------------------------------------------- */
@@ -116,7 +99,7 @@ button {
 	/* Erlaubt Flexbox, die Box bei Bedarf zu verkleinern */
 	background-color: #ffffff;
 	border-radius: 8px;
-	padding: 5px;
+	padding: 10px;
 	display: flex;
 	flex-direction: column;
 	gap: 2px;
@@ -142,19 +125,21 @@ button {
 	flex-direction: row;
 	align-items: center;
 	/* Richtet Label und Input vertikal mittig zueinander aus */
-	gap: 5px;
+	gap: 10px;
 	/* Abstand zwischen Label und Input */
 	width: 100%;
 }
 
 /* Die Labels bekommen eine feste Breite, damit alle Inputs sauber untereinander starten */
 .form-row label {
-	width: 90px;
+	width: 95px;
 	/* Breite je nach längstem Label-Text anpassen */
-	min-width: 90px;
+	min-width: 95px;
 	/* Verhindert, dass das Label zusammengedrückt wird */
 	text-align: right;
 	/* Optional: Richtet den Text rechtsbündig zum Input aus */
+	color: gray;
+	font-weight: bold;
 	margin-left: -12px;
 }
 
@@ -165,7 +150,6 @@ button {
 	/* Zwingt das Input-Feld, den Rest der Zeile einzunehmen */
 	width: 100%;
 	min-width: 0;
-	min-height: 22px;
 	/* Erlaubt dem Input, bei sehr kleinen Fenstern stabil zu schrumpfen */
 	border: 1px solid #ccc;
 	border-radius: 4px;
@@ -211,10 +195,8 @@ input#filename {
 }
 
 .form-row textarea {
-	flex: 1;
-	height: 100%;
-	resize: none;
 	line-height: 1.2;
+	min-height: 140px;
 }
 
 .form-row input:focus-visible,
@@ -226,9 +208,6 @@ input#filename {
 .form-row-top {
 	align-items: flex-start !important;
 	/* Richtet Label, Textarea und Icon oben aus */
-	flex: 1;         /* NEU: Nimmt den freien Platz im form-container ein */
-	min-height: 22px;
-	overflow: hidden
 }
 
 .form-row-top label,
@@ -375,7 +354,7 @@ button:hover {
 .button-group {
 	display: flex;
 	justify-content: flex-end;
-	margin: 10px 20px 0 0;
+	margin: 10px 24px 0 0;
 }
 
 .button-group button {
@@ -400,7 +379,7 @@ button:hover {
 .info-icon {
 	color: #0066cc;
 	/* Schönes Info-Blau */
-	margin-left: 5px;
+	padding: 0 4px;
 	font-size: 13px;
 }
 
@@ -421,14 +400,17 @@ button:hover {
 	font-size: 11px;
 	line-height: 1.4;
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-	z-index: 1001;   /* Über der Statusleiste (1000), falls sie sich überschneiden */
+	z-index: 1001;
+	/* Über der Statusleiste (1000), falls sie sich überschneiden */
 
 	/* Verschiebt den Tooltip komplett nach links, 
      sodass seine rechte Kante am Cursor sitzt */
-	transform: translate(-100%, 30%);
+	transform: translate(-100%, 40%);
+	*/
 	/* Animation & Verstecken */
 	transition: opacity 0.2s ease-in-out, visibility 0.2s;
-	pointer-events: none;  /* Verhindert, dass die Box beim unabsichtlichen Drüberfahren flackert */
+	pointer-events: none;
+	/* Verhindert, dass die Box beim unabsichtlichen Drüberfahren flackert */
 }
 
 /* Zeige den Tooltip nur, wenn die Maus über dem Container ist */

@@ -4,13 +4,19 @@ let aktuellerIndex = -1;
 let statusText = document.getElementById('statustext');
 let stapelmodus = 0;
 let bildTypen = ['jpg', 'jpeg', 'png', 'gif', 'tif', 'tiff',
-    'webp', 'avif', 'heic', 'heif']
+                  'webp', 'avif', 'heic', 'heif']
 
 const invoke = window.__TAURI__.core.invoke;
 
 
 document.addEventListener('DOMContentLoaded', async () => {
 
+    requestAnimationFrame(() => {
+        requestAnimationFrame(async () => {
+            await resizeWindowToContent();
+        });
+    });
+    
     // Alle Buttons mit der Klasse "pager-btn" auswählen
     const pagerButtons = document.querySelectorAll('.pager-btn');
     pagerButtons.forEach(button => {
@@ -65,21 +71,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     // CLI-Auswertung für positionelle Pfade (Korrigiert)
     try {
         const cliMatches = await window.__TAURI__.cli.getMatches();
-
+        
         if (cliMatches && cliMatches.args && cliMatches.args.pfade && cliMatches.args.pfade.value) {
-
+            
             // Filtert leere Einträge und eventuelle Tauri-Dev-Flags heraus
             const uebergebenePfade = cliMatches.args.pfade.value
                 .map(p => String(p).trim())
                 .filter(p => p !== "" && !p.startsWith("-"));
-
+            
             if (uebergebenePfade.length > 0) {
                 if (uebergebenePfade.length === 1) {
                     // ==========================================================
                     // FALL A: Genau EIN Pfad (Datei oder Ordner)
                     // ==========================================================
                     const einzelPfad = uebergebenePfade[0]; // <--- WICHTIG: [0] ergänzt!
-
+                    
                     const testBilder = await invoke('hole_ordner_bilder', {
                         dateipfad: einzelPfad,
                         gueltigeEndungen: bildTypen
@@ -97,7 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         } else {
                             bilderListe = testBilder;
                             stapelmodus = testBilder.length === 1 ? 0 : 2;
-
+                            
                             if (stapelmodus === 0) {
                                 aktuellerBildPfad = bilderListe[0];
                                 aktuellerIndex = 0;
@@ -114,10 +120,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     //zeigeStatus(`${uebergebenePfade.length} Bilder über CLI geöffnet.`);
                     bilderListe = uebergebenePfade;
                     stapelmodus = 1;
-
+                    
                     const erstesBild = uebergebenePfade[0]; // <--- WICHTIG: [0] ergänzt!
                     const dirPath = erstesBild.substring(0, Math.max(erstesBild.lastIndexOf('/'), erstesBild.lastIndexOf('\\')));
-
+                    
                     triggereStapelmodusUI(dirPath);
                 }
             }
@@ -129,6 +135,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 aktualisiereEingabeBereich("datei", "");
+
+async function resizeWindowToContent() {
+    if (window.__TAURI__) {
+        const { getCurrentWindow, LogicalSize } = window.__TAURI__.window;
+
+        // Gewünschte Breite (fest oder dynamisch)
+        const fixedWidth = 850;
+
+        // Höhe deines HTML-Inhalts ermitteln
+        const contentHeight = document.body.offsetHeight;
+        const totalHeight = contentHeight + 85;
+        const appWindow = getCurrentWindow();
+        await appWindow.setSize(new LogicalSize(fixedWidth, totalHeight));
+    }
+}
 
 async function ladeOrdnerBilder(pfad) {
     try {
@@ -328,7 +349,7 @@ async function exifSchreiben(ereignis) {
     if (ereignis) ereignis.preventDefault();
 
     const istStapel = (stapelmodus > 0);
-
+    
     // Sicherstellen, dass wir ein echtes, sauberes Array haben
     let pfadeFuerRust = [];
     if (istStapel) {
@@ -452,9 +473,9 @@ function triggereStapelmodusUI(ordnerPfad) {
     document.getElementById('img-datum').innerText = "STAPELMODUS";
     document.getElementById('img-groesse').innerText = "";
     document.getElementById('ordner-pfad').innerText = ordnerPfad;
-
+    
     aktualisiereEingabeBereich('ordner', bilderListe);
-
+    
     ['caption', 'description', 'keywords', 'creator', 'copyright', 'editor', 'position'].forEach(id => {
         const feld = document.getElementById(id);
         if (feld) feld.value = '';

@@ -10,6 +10,7 @@ body {
 	padding: 0;
 	height: 100vh;
 	width: 100vw;
+	height: auto;
 	overflow: hidden;
 	/* Verhindert jegliche äußere Scrollbalken */
 	background: #f5f5f5;
@@ -75,7 +76,6 @@ button {
 /* Kachel 2: Bild + Info-Text darunter */
 #preview-card {
 	flex: 1;   /* gesamte restliche Höhe */
-	min-height: 0;
 	background-color: #ffffff;
 	border-radius: 8px;
 	padding: 5px;
@@ -83,28 +83,12 @@ button {
 	text-align:center;
 	font-size: 12px;
 	color: gray;
-
-	/* Als Flexbox definieren, damit das Bild flexibel skaliert */
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: flex-start;
-	overflow: hidden;        /* Verhindert Überlappen beim Verkleinern */
 }
 
 #vorschau-bild {
 	max-width: 130px;
-	width: auto;
-	height: auto;
-	min-height: 0;           /* NEU: Erlaubt dem Bild, bis auf 0px zu schrumpfen */
-	flex-shrink: 1;          /* NEU: Bild gibt als Erstes nach, wenn Platz knapp wird */
-	object-fit: contain;     /* Behält das Seitenverhältnis exakt bei */
 	margin: 2px auto;
-}
-
-#bild-info {
-	flex-shrink: 0;          /* NEU: Zwingt den Text, IMMER vollständig sichtbar zu bleiben */
-	padding-top: 2px;
+	height: auto;
 }
 
 /* ------------------------------------------------------------------------------------- */
@@ -165,7 +149,6 @@ button {
 	/* Zwingt das Input-Feld, den Rest der Zeile einzunehmen */
 	width: 100%;
 	min-width: 0;
-	min-height: 22px;
 	/* Erlaubt dem Input, bei sehr kleinen Fenstern stabil zu schrumpfen */
 	border: 1px solid #ccc;
 	border-radius: 4px;
@@ -215,6 +198,7 @@ input#filename {
 	height: 100%;
 	resize: none;
 	line-height: 1.2;
+	min-height: 140px;
 }
 
 .form-row input:focus-visible,
@@ -227,8 +211,7 @@ input#filename {
 	align-items: flex-start !important;
 	/* Richtet Label, Textarea und Icon oben aus */
 	flex: 1;         /* NEU: Nimmt den freien Platz im form-container ein */
-	min-height: 22px;
-	overflow: hidden
+	min-height: 0;
 }
 
 .form-row-top label,
